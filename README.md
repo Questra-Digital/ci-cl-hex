@@ -1,2 +1,3 @@
-# ci-cl-hex
-A platform that supports collective intelligence and collaborative learning for individuals and organizations.
+# cipl-hex
+***Towards limitless productive learning***
+A platform that supports collective intelligence and productive learning for individuals and organizations.
