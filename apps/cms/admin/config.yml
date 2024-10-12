@@ -1,0 +1,27 @@
+local_backend: true
+
+backend:
+  name: github
+  repo: Questra-Digital/cimpl-hex
+  branch: main
+  api_root: https://api.github.com
+  auth_endpoint: auth
+  cms_label_prefix: decap-cms/
+media_folder: /apps/cms/admin/img
+public_folder: /apps/cms/public/img
+collections:
+  - name: 'blog'
+    label: 'Blog'
+    folder: 'content/blog'
+    create: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    editor:
+      preview: false
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'Publish Date', name: 'date', widget: 'datetime' }
+      - { label: 'Description', name: 'description', widget: 'string' }
+      - { label: 'Body', name: 'body', widget: 'markdown' }
+
+
+
