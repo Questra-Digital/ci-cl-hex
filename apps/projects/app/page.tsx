@@ -1,6 +1,6 @@
 import Image from "next/image";
-import SectionHeader from "@/components/SectionHeader";
-import Card from "@/components/card";
+import SectionHeader from "@/app/components/SectionHeader";
+import Card from "@/app/components/card";
 
 export default function Home() {
   return (
