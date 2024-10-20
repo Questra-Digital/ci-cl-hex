@@ -26,6 +26,38 @@ services:
       - 8081:8000
     networks:
       - apps
+  projects-web:
+    build:
+      context: "./apps/projects"
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - "./apps/projects/app:/app/app"
+      - "./apps/projects/components:/app/components"
+      - "./apps/projects/lib:/app/lib"
+      - "./apps/projects/.eslintrc.js:/app/.eslintrc.js"
+      - "./apps/projects/components.json:/app/components.json"
+      - "./apps/projects/next.config.mjs:/app/next.config.mjs"
+      - "./apps/projects/postcss.config.mjs:/app/postcss.config.mjs"
+      - "./apps/projects/tailwind.config.ts:/app/tailwind.config.ts"
+      - "./apps/projects/tsconfig.json:/app/tsconfig.json"
+    ports:
+      - 8082:3000
+    networks:
+      - apps
+  projects-api:
+    build:
+      context: "./apps/projects/api"
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - "./apps/projects/api/src:/app/src"
+      - "./apps/projects/api/.env:/app/.env"
+      - "./apps/projects/api/tsconfig.json:/app/tsconfig.json"
+    ports:
+      - 8083:4000
+    networks:
+      - apps
   proxy:
     build:
       context: "./apps/proxy"
