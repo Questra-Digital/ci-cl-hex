@@ -3,6 +3,37 @@ services:
     build:
       context: "./apps/cms"
       dockerfile: Dockerfile
+    volumes:
+      - "./apps/cms/admin:/usr/share/nginx/html"
     ports:
       - 8080:80
-  
+    networks:
+      - apps
+  web:
+    build:
+      context: "./apps/website"
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - "./apps/website/src:/app/src"
+      - "./apps/website/gatsby-browser.js:/app/gatsby-browser.js"
+      - "./apps/website/gatsby-config.ts:/app/gatsby-config.ts"
+      - "./apps/website/gatsby-node.ts:/app/gatsby-node.ts"
+      - "./apps/website/postcss.config.js:/app/postcss.config.js"
+      - "./apps/website/tailwind.config.js:/app/tailwind.config.js"
+      - "./apps/website/tsconfig.json:/app/tsconfig.json"
+    ports:
+      - 8081:8000
+    networks:
+      - apps
+  proxy:
+    build:
+      context: "./apps/proxy"
+      dockerfile: Dockerfile
+    networks:
+      - apps
+    ports:
+      - 80:80
+
+networks:
+  apps:

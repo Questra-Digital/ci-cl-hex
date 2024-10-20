@@ -4,9 +4,12 @@ backend:
   name: github
   repo: Questra-Digital/cimpl-hex
   branch: main
+  site_domain: demo.decapcms.org
   api_root: https://api.github.com
   auth_endpoint: auth
   cms_label_prefix: decap-cms/
+
+
 media_folder: /apps/cms/admin/img
 public_folder: /apps/cms/public/img
 collections:
