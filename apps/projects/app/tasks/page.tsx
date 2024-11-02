@@ -1,10 +1,13 @@
 // pages/index.tsx
 import ProjectManagement from '@/app/containers/ProjectManagement';
+import HomePage from '@/app/components/ux/sidebar/sidebar';
 
 const Home = () => {
   return (
     <div>
-      <ProjectManagement />
+      <HomePage>
+        <ProjectManagement />
+      </HomePage>
     </div>
   );
 };

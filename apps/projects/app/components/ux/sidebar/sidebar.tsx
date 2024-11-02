@@ -1,18 +1,18 @@
 'use client'
 
 import React, { useState } from 'react';
-import { Menu, X, MessageSquare, Settings, HelpCircle, User, Bell, Sparkles } from 'lucide-react';
+import { Menu, X, Kanban, Settings, HelpCircle, User, Bell, Activity } from 'lucide-react';
 import { Button } from "@/app/components/ui/button";
 import { ScrollArea } from "@/app/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/ui/avatar";
 import { Badge } from "@/app/components/ui/badge";
 
-const HomePage = () => {
+const HomePage = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifications] = useState(3);
 
   const menuItems = [
-    { icon: <MessageSquare size={20} />, text: 'New Chat' },
+    { icon: <Kanban size={20} />, text: 'Projects' },
     { icon: <User size={20} />, text: 'Profile' },
     { icon: <Settings size={20} />, text: 'Settings' },
     { icon: <HelpCircle size={20} />, text: 'Help & FAQ' },
@@ -26,7 +26,7 @@ const HomePage = () => {
           {/* Sidebar Header */}
           <div className="p-4 border-b shrink-0">
             <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold text-gray-900">Claude</h1>
+              <h1 className="text-xl font-semibold text-gray-900">CIMPL</h1>
               <Button
                 variant="ghost"
                 size="icon"
@@ -62,11 +62,11 @@ const HomePage = () => {
               <div className="flex items-center space-x-3">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/api/placeholder/32/32" alt="User" />
-                  <AvatarFallback>U</AvatarFallback>
+                  <AvatarFallback>J</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium">John Doe</span>
-                  <span className="text-xs text-gray-500">john@example.com</span>
+                  <span className="text-sm font-medium">Jawad Khalid</span>
+                  <span className="text-xs text-gray-500">jawad@questra.digital</span>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
@@ -104,20 +104,18 @@ const HomePage = () => {
 
         {/* Main content area */}
         <main className="flex-1 p-6 overflow-y-auto">
-          <div className="max-w-2xl mx-auto text-center space-y-6">
+          <div className="max-w-7xl mx-auto text-center space-y-6">
             {/* Tooltip */}
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full text-blue-700 text-sm font-medium">
-              <Sparkles size={16} />
-              <span>Get started with our AI assistant</span>
+              <Activity size={16} />
+              <span>Keep people of Gaza in your prayers. And Take care of underpreivliged people around you</span>
             </div>
 
-            <h2 className="text-4xl font-bold text-gray-900">Welcome to Claude</h2>
+            <h2 className="text-4xl font-bold text-gray-900">Assalamu Alaikum! Jawad</h2>
             <p className="text-lg text-gray-600">
-              Your AI assistant for writing, analysis, math, coding and more
+              With Allah's blessings, See your innovative Ideas come to reality
             </p>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2 rounded-lg">
-              Start New Chat
-            </Button>
+            {children}
           </div>
         </main>
       </div>
