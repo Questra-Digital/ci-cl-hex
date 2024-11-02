@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardHeader, CardTitle, CardContent } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
@@ -10,9 +11,11 @@ import { GripHorizontal, X } from 'lucide-react';
 // Mock data
 const mockData = {
   epics: [
-    { id: '1', title: 'User Authentication', status: 'TODO', description: 'Implement user auth system' },
-    { id: '2', title: 'Payment Integration', status: 'IN_PROGRESS', description: 'Add payment gateway' },
-    { id: '3', title: 'Reporting Dashboard', status: 'DONE', description: 'Create analytics dashboard' },
+    { id: '1', title: 'User Authentication', status: 'NOW', description: 'Implement user auth system' },
+    { id: '2', title: 'User Authorization', status: 'NOW', description: 'Implement Role-Based Access Control' },
+    { id: '3', title: 'Social Logins', status: 'NOW', description: 'Implement Social Sign Up' },
+    { id: '4', title: 'Payment Integration', status: 'NEXT', description: 'Add payment gateway' },
+    { id: '5', title: 'Reporting Dashboard', status: 'LATER', description: 'Create analytics dashboard' },
   ],
   stories: [
     { id: '1', title: 'Login Form', status: 'TODO', epicId: '1', description: 'Create login form with validation' },
@@ -132,7 +135,16 @@ const ProjectManagement = () => {
   const [dragType, setDragType] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
+  const [expandedColumn, setExpandedColumn] = useState(null);
 
+  const handleColumnClick = (columnKey) => {
+    if (expandedColumn === columnKey) {
+      setExpandedColumn(null);
+    } else {
+      setExpandedColumn(columnKey);
+    }
+  };
+  
   const handleDragStart = (e, item, type) => {
     setDraggedItem(item);
     setDragType(type);
@@ -184,39 +196,113 @@ const ProjectManagement = () => {
       {/* EPICs Section */}
       <section className="space-y-4">
         <h2 className="text-2xl font-bold">EPICs</h2>
-        <div className="grid grid-cols-3 gap-4">
-          {['TODO', 'IN_PROGRESS', 'DONE'].map((status) => (
-            <div
-              key={status}
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, status)}
-              className="bg-gray-50 p-4 rounded-lg min-h-[400px]"
-            >
-              <h3 className="font-semibold mb-4">{status.replace('_', ' ')}</h3>
-              {epics
-                .filter(epic => epic.status === status)
-                .map((epic) => (
-                  <Card
-                    key={epic.id}
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, epic, 'epic')}
-                    onClick={() => handleItemClick(epic, 'epic')}
-                    className="mb-4 cursor-pointer hover:shadow-lg transition-shadow"
+        <motion.div 
+          className="grid grid-cols-3 gap-4"
+          animate={{
+            gridTemplateColumns: expandedColumn ? "1fr" : "1fr 1fr 1fr",
+          }}
+        >
+          {['NOW', 'NEXT', 'LATER'].map((status) => (
+            <AnimatePresence key={status}>
+              {(!expandedColumn || expandedColumn === status) && (
+                <motion.div
+                  initial={false}
+                  animate={{
+                    x: expandedColumn === status ? 0 : 0,
+                    width: expandedColumn === status ? "100%" : "auto",
+                    height: expandedColumn === status ? "auto" : "auto",
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  onClick={() => handleColumnClick(status)}
+                  className="relative"
+                >
+                  <div
+                    key={status}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, status)}
+                    className="bg-gray-50 p-4 rounded-lg min-h-[400px]"
                   >
-                    <CardHeader>
-                      <div className="float-right">
-                        <GripHorizontal className="h-4 w-4" />
-                      </div>
-                      <CardTitle>{epic.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-gray-600">{epic.description}</p>
-                    </CardContent>
-                  </Card>
-              ))}
-            </div>
+                    <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-semibold mb-4">{status.replace('_', ' ')}</h3>
+                      {expandedColumn === status && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setExpandedColumn(null);
+                          }}
+                          className="p-2 hover:bg-gray-100 rounded-full"
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
+                      )}
+                    </div>
+
+                    {expandedColumn === status ? (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="flex overflow-x-auto space-x-4 p-4"
+                      >
+                        {epics
+                          .filter(epic => epic.status === status)
+                          .map((epic) => (
+                            <Card
+                              key={epic.id}
+                              draggable
+                              onDragStart={(e) => handleDragStart(e, epic, 'epic')}
+                              onClick={() => handleItemClick(epic, 'epic')}
+                              className="mb-4 cursor-pointer hover:shadow-lg transition-shadow"
+                            >
+                              <CardHeader>
+                                <div className="float-right">
+                                  <GripHorizontal className="h-4 w-4" />
+                                </div>
+                                <CardTitle>{epic.title}</CardTitle>
+                              </CardHeader>
+                              <CardContent>
+                                <p className="text-sm text-gray-600">{epic.description}</p>
+                              </CardContent>
+                            </Card>
+                        ))}
+                      </motion.div>
+                    ) : (
+                      <motion.div layout>
+                        {epics
+                          .filter(epic => epic.status === status)
+                          .map((epic) => (
+                            <Card
+                              key={epic.id}
+                              draggable
+                              onDragStart={(e) => handleDragStart(e, epic, 'epic')}
+                              onClick={() => handleItemClick(epic, 'epic')}
+                              className="mb-4 cursor-pointer hover:shadow-lg transition-shadow"
+                            >
+                              <CardHeader>
+                                <div className="float-right">
+                                  <GripHorizontal className="h-4 w-4" />
+                                </div>
+                                <CardTitle>{epic.title}</CardTitle>
+                              </CardHeader>
+                              <CardContent>
+                                <p className="text-sm text-gray-600">{epic.description}</p>
+                              </CardContent>
+                            </Card>
+                        ))}
+                      </motion.div>
+                    )}
+
+
+                    
+                  </div>
+
+                </motion.div>
+              )}
+              
+            </AnimatePresence>
+            
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* User Stories Section */}
